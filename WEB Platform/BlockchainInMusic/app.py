@@ -442,6 +442,7 @@ def dis_accept_contract():
 		# db.child('contracts').child(key).child("status").set("active")
 		# db.child('contracts').child(key).child("activation_time").set(str(datetime.datetime.now()))
 		if dis_id == "blank":
+
 			dis_id = []
 			dis_id.append(str(localId))
 		db.child('contracts').child(key).child("dis_id").set(dis_id)
@@ -459,6 +460,12 @@ def dis_accept_contract():
 		# pro_contracts=int(db.child('producers').child(pro_id).child('contracts').get().val())
 		db.child('producers').child(pro_id).child('active_contracts').set(pro_ac_contracts + 1)
 		# db.child('producers').child(pro_id).child('contracts').set(pro_contracts-1)
+
+	###################################################################################################
+		transaction_str = c_name + pro_id + localId + alb_id + str(rev)
+		add_transaction(transaction_str)
+
+	####################################################################################################
 
 		flash('Contract accepted Successfully! \n NOTE - Contract is now Active!', 'info')
 
@@ -590,6 +597,9 @@ def dis_payment():
 	                       views=views, revenue=revenue)
 
 
+
+###################################################################
+
 @app.route('/sendnodes', methods=['POST', 'GET'])
 def register_new_nodes():
 	# nodes_set.add(request.host_url)
@@ -633,7 +643,7 @@ def activate_job():
 
 	thread = threading.Thread(target=run_job)
 	thread.start()
-
+########################################################################
 
 if __name__ == '__main__':
 	app.run(debug=True)

@@ -14,7 +14,7 @@ from contract import Contract
 import requests
 
 class Blockchain:
-    __Difficulty = 2
+    __Difficulty = 5
 
     def __init__(self):
 
@@ -359,11 +359,11 @@ def Mine():
 
 @app.route('/resolve_nodes', methods=['GET'])
 def Nodesconsensus():
-    transaction_id = request.get_json()["transaction_id"]
+    # transaction_id = request.get_json()["transaction_id"]
     response = blockchain.getNodes(request.host_url)
     response = {
-        'nodes': list(Blockchain.nodes_set),
-        'length': len(Blockchain.nodes_set),
+        'nodes': list(blockchain.nodes_set),
+        'length': len(blockchain.nodes_set),
     }
 
     return jsonify(response), 200

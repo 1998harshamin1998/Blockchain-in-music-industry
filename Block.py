@@ -23,4 +23,4 @@ class Block:
 
 
     def __repr__(self):
-        return 'index: ' + str(self.index) + "Proof: " + str(self.proof) +  " Block_Hash: " + str(self.transactions) + " timestamp: " + str(self.timestamp)  + " previousHash: " + str(self.previousHash)
+        return 'index: ' + str(self.index) + "Proof: " + str(self.proof) + "Transactions: " + str(self.transactions) + " timestamp: " + str(self.timestamp)  + " previousHash: " + str(self.previousHash)
