@@ -177,7 +177,7 @@ class Blockchain:
         return chain_data
 
     def getNodes(self, sUrl):
-        url = 'http://localhost:5001/sendnodes'
+        url = 'http://localhost:5000/sendnodes'
         data = {"node_address": sUrl}
         headers = {'Content-Type': "application/json"}
         response = requests.post(url, data=json.dumps(data), headers=headers)

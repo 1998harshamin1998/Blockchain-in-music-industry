@@ -1,23 +1,28 @@
 import pyrebase
 from flask import *
 import datetime
+from flask import jsonify
 from datetime import date
 from werkzeug.utils import secure_filename
 import unicodedata
+import json
+import requests
+
 from flask_table import Table, Col
+
 
 
 
 
 config = {
 	"apiKey": "AIzaSyBqJmj4LU6gnEVdX-KUsj6IqTR3Rq0kygs",
-    "authDomain": "blockchain-in-music.firebaseapp.com",
-    "databaseURL": "https://blockchain-in-music.firebaseio.com",
-    "projectId": "blockchain-in-music",
-    "storageBucket": "blockchain-in-music.appspot.com",
-    "messagingSenderId": "559996951702",
-    "appId": "1:559996951702:web:12d3b2716399ecc943f6b7",
-    "measurementId": "G-18NBTS9NPH"
+	"authDomain": "blockchain-in-music.firebaseapp.com",
+	"databaseURL": "https://blockchain-in-music.firebaseio.com",
+	"projectId": "blockchain-in-music",
+	"storageBucket": "blockchain-in-music.appspot.com",
+	"messagingSenderId": "559996951702",
+	"appId": "1:559996951702:web:12d3b2716399ecc943f6b7",
+	"measurementId": "G-18NBTS9NPH"
 
 }
 
@@ -27,8 +32,11 @@ firebase = pyrebase.initialize_app(config)
 
 auth=firebase.auth()
 db = firebase.database()
-storage=firebase.storage()        
- 
+storage=firebase.storage()
+
+nodes_set = set()  # A set to save list of nodes in the distributed network
+
+
 
 def allowed_file(filename):
 	return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -99,7 +107,7 @@ def dis_sign_up():
 		phone_no=request.form['phone']
 		company_name=request.form['company_name']
 		app_name=request.form['app_name']
-		api_key=str(name+str(phone_no[:len(phone_no)/2])+app_name+str(phone_no[len(phone_no)/2:])+email.replace('.',''))
+		api_key=str(name+str(phone_no[:len(phone_no)//2])+app_name+str(phone_no[len(phone_no)//2:])+email.replace('.',''))
 		
 		search_ph=db.child("distributors").get()
 		if search_ph.val()!=None:
@@ -351,6 +359,9 @@ def dis_accept_contract():
 		db.child('producers').child(pro_id).child('contracts').set(pro_contracts-1)
 
 		flash('Contract accepted Successfully! \n NOTE - Contract is now Active!', 'info')
+		
+
+
 		return redirect(url_for('dis_home'))
 
 
@@ -368,6 +379,21 @@ def dis_accept_contract():
 				rev.append(i['revenue'])
 	print(list(db.child('albums').child(i['pro_id']).child(i['alb_id']).get().val().values()))
 	return render_template("accept_contract.html", albums=albums, contracts=contracts, artists=artists, revenue=rev)
+
+
+@app.route('/sendnodes', methods=['POST', 'GET'])
+def register_new_peers():
+
+	# nodes_set.add(request.host_url)
+	nodes_set.add(request.get_json()["node_address"])
+	response = {
+		'nodes': list(nodes_set),
+		'length': len(nodes_set),
+	}
+
+	return jsonify(response), 200
+
+
 
 if __name__=='__main__':
 	app.run(debug=True)
