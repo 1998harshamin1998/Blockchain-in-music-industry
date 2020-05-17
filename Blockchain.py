@@ -96,6 +96,17 @@ class Blockchain:
 
         return new_block.index
 
+    def mine_blocks(self, transaction, transaction_id):
+        last_block = self.last_block
+        new_block = Block(last_block.index + 1,
+                          transaction,
+                          last_block.blockHash)
+        proof = self.proof_of_work(new_block)
+        if Blockchain.update_Semaphore(transaction_id):
+            self.add_block(new_block, proof)
+            return new_block.index
+
+
 
     def valid_chain(self, chain):
         """
@@ -124,7 +135,6 @@ class Blockchain:
             current_index += 1
 
         return True
-
 
     def resolve_chain_conflicts(self):
         neighbours = self.nodes_set
@@ -189,7 +199,20 @@ class Blockchain:
         else:
             return False
 
+    @staticmethod
+    def update_Semaphore(transaction_id):
+        url = 'http://localhost:5000/semaphore'
+        data = {
+                "transaction_id": transaction_id
+                }
 
+        headers = {'Content-Type': "application/json"}
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+        if response.status_code == 200:
+            #length = response.json()['length']
+            return response.json()['entry']
+        else:
+            return False
 
 
 # Instantiate our Node
@@ -325,10 +348,18 @@ def consensus():
 
     return jsonify(response), 200
 
+@app.route('/mine', methods=['POST', 'GET'])
+def Mine():
+    transaction = request.get_json()["transaction"]
+    transaction_id = request.get_json()["transaction_id"]
+    blockchain.mine_blocks(transaction, transaction_id)
+
+    return redirect('/chain')
+
 
 @app.route('/resolve_nodes', methods=['GET'])
 def Nodesconsensus():
-
+    transaction_id = request.get_json()["transaction_id"]
     response = blockchain.getNodes(request.host_url)
     response = {
         'nodes': list(Blockchain.nodes_set),
@@ -336,6 +367,7 @@ def Nodesconsensus():
     }
 
     return jsonify(response), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

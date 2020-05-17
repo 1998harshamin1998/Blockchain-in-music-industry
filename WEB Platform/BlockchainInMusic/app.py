@@ -1,11 +1,14 @@
 import pyrebase
 from flask import *
 import datetime
-from flask import jsonify
+from flask import jsonify, request
 from datetime import date
 from werkzeug.utils import secure_filename
 import unicodedata
+from hashlib import sha256
 import json
+import threading
+from time import sleep
 import requests
 import random
 
@@ -31,9 +34,61 @@ auth = firebase.auth()
 db = firebase.database()
 storage = firebase.storage()
 
+#############################################################################################
+
 nodes_set = set()  # A set to save list of nodes in the distributed network
+Pending_Transactions = []  # A list to store pending transactions
+semaphore = {}  # dictionary for blockchain critical section
 
 
+class myThread(threading.Thread):
+	def __init__(self, threadID, name):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.name = name
+
+	def run(self):
+		while True:
+			generate_block()
+			sleep(5)
+
+
+# Create new threads
+thread1 = myThread(1, "Generate Blocks")
+
+# Start new Threads
+thread1.start()
+thread1.join()
+
+
+def generate_block():
+	if len(Pending_Transactions) > 1:
+		temp = ""
+		for t in Pending_Transactions:
+			temp += t
+
+		transaction_id = sha256(temp.encode()).hexdigest()
+		for node in nodes_set:
+			url = node + "mine"
+			data = {"transaction": Pending_Transactions,
+			        "transaction_id": transaction_id
+			        }
+			headers = {'Content-Type': "application/json"}
+			response = requests.post(url, data=json.dumps(data), headers=headers)
+
+		Pending_Transactions.clear()
+
+	# if response.status_code == 200:
+	# 	length = response.json()['length']
+	# 	self.nodes_set.update(response.json()['nodes'])
+	# 	return True
+	# else:
+	# 	return False
+
+
+def add_transaction(trans_str):
+	transaction_hash = sha256(trans_str.encode()).hexdigest()
+	Pending_Transactions.append(transaction_hash)
 
 
 def allowed_file(filename):
@@ -202,7 +257,7 @@ def pro_home():
 				if i['status'] == 'pending':
 					pending_contracts.append({"Contract Name ": i['c_name'], "Album Name ":
 						list(db.child('albums').child(localId).child(i['alb_id']).get().val().values())[0],
-											  "Revenue ( $ / view )": i['revenue'], "Timestamp": i['timestamp']})
+					                          "Revenue ( $ / view )": i['revenue'], "Timestamp": i['timestamp']})
 				elif i['status'] == 'active':
 					dis_name = db.child('distributors').child(i['dis_id']).child("name").get().val()
 					app_name = db.child('distributors').child(i['dis_id']).child("app_name").get().val()
@@ -210,14 +265,14 @@ def pro_home():
 					dis_phone = db.child('distributors').child(i['dis_id']).child("phone").get().val()
 					active_contracts.append({"Contract Name ": i['c_name'], "Album Name ":
 						list(db.child('albums').child(localId).child(i['alb_id']).get().val().values())[0],
-											 "Revenue ( $ / view )": i['revenue'],
-											 "Activation Time ": i['activation_time'], "Distributor Name ": dis_name,
-											 "App Name ": app_name, "Company Name ": company_name,
-											 "Distributor Contact ": dis_phone})
+					                         "Revenue ( $ / view )": i['revenue'],
+					                         "Activation Time ": i['activation_time'], "Distributor Name ": dis_name,
+					                         "App Name ": app_name, "Company Name ": company_name,
+					                         "Distributor Contact ": dis_phone})
 	return render_template("pro_home.html", names=[name.val()], contracts=str(contract.val()),
-						   ac_contracts=str(ac_contract.val()), views=str(view.val()), revenue=str(rev.val()),
-						   albums=albums, album_arts=album_arts, pending_contracts=pending_contracts,
-						   active_contracts=active_contracts)
+	                       ac_contracts=str(ac_contract.val()), views=str(view.val()), revenue=str(rev.val()),
+	                       albums=albums, album_arts=album_arts, pending_contracts=pending_contracts,
+	                       active_contracts=active_contracts)
 
 
 @app.route('/dis_home', methods=['GET', 'POST'])
@@ -234,16 +289,16 @@ def dis_home():
 			contract += 1
 			available_contracts.append({"Contract Name ": i['c_name'], "Album Name ":
 				list(db.child('albums').child(i['pro_id']).child(i['alb_id']).get().val().values())[0],
-										"Revenue ( $ / view )": i['revenue'], "Timestamp": i['timestamp'],
-										"Producer Name ": db.child('producers').child(i['pro_id']).get().val()['name']})
+			                            "Revenue ( $ / view )": i['revenue'], "Timestamp": i['timestamp'],
+			                            "Producer Name ": db.child('producers').child(i['pro_id']).get().val()['name']})
 	for i in db.child('active_contracts').get().val().values():
 		if i['dis_id'] == str(localId):
 			active_contracts.append({"Contract Name ": i['c_name'], "Album Name ":
 				list(db.child('albums').child(i['pro_id']).child(i['alb_id']).get().val().values())[0],
-									 "Revenue ( $ / view )": i['revenue'], "Activation Time ": i['activation_time'],
-									 "Producer Name ": db.child('producers').child(i['pro_id']).get().val()['name'],
-									 "Current Views": i['views'], "Last Payment Date": i['lastPayTime'],
-									 "Payment Till Date ($)": i['totalPay']})
+			                         "Revenue ( $ / view )": i['revenue'], "Activation Time ": i['activation_time'],
+			                         "Producer Name ": db.child('producers').child(i['pro_id']).get().val()['name'],
+			                         "Current Views": i['views'], "Last Payment Date": i['lastPayTime'],
+			                         "Payment Till Date ($)": i['totalPay']})
 
 	ac_contract = db.child('distributors').child(localId).child('active_contracts').get()
 	view = db.child('distributors').child(localId).child('views').get()
@@ -251,8 +306,8 @@ def dis_home():
 	apiKey = db.child('distributors').child(localId).child('api_key').get().val()
 
 	return render_template("dis_home.html", names=[name.val()], contracts=contract, ac_contracts=str(ac_contract.val()),
-						   views=str(view.val()), revenue=str(rev.val()), available_contracts=available_contracts,
-						   active_contracts=active_contracts, apiKey=apiKey)
+	                       views=str(view.val()), revenue=str(rev.val()), available_contracts=available_contracts,
+	                       active_contracts=active_contracts, apiKey=apiKey)
 
 
 @app.route('/create_contract', methods=['GET', 'POST'])
@@ -528,11 +583,11 @@ def dis_payment():
 				revenue.append(rev)
 
 	return render_template("dis_pay_pro.html", c_names=c_names, c_ids=c_ids, art_name=art_name, album_names=album_names,
-						   views=views, revenue=revenue)
+	                       views=views, revenue=revenue)
 
 
 @app.route('/sendnodes', methods=['POST', 'GET'])
-def register_new_peers():
+def register_new_nodes():
 	# nodes_set.add(request.host_url)
 	nodes_set.add(request.get_json()["node_address"])
 	response = {
@@ -541,6 +596,26 @@ def register_new_peers():
 	}
 
 	return jsonify(response), 200
+
+@app.route('/semaphore', methods=['POST', 'GET'])
+def semaphore_update():
+	# nodes_set.add(request.host_url)
+	transactionId = request.get_json()["transaction_id"]
+	if transactionId not in semaphore.keys():
+		semaphore[transactionId] = 1
+		response = {
+			'entry': True
+		}
+		return jsonify(response), 200
+	else:
+		semaphore[transactionId] += 1
+		if semaphore[transactionId] == len(nodes_set):
+			semaphore.pop(transactionId)
+
+		response = {
+			'entry': False
+		}
+		return jsonify(response), 200
 
 
 if __name__ == '__main__':
