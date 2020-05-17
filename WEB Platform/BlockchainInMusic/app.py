@@ -41,26 +41,6 @@ Pending_Transactions = []  # A list to store pending transactions
 semaphore = {}  # dictionary for blockchain critical section
 
 
-class myThread(threading.Thread):
-	def __init__(self, threadID, name):
-		threading.Thread.__init__(self)
-		self.threadID = threadID
-		self.name = name
-
-	def run(self):
-		while True:
-			generate_block()
-			sleep(5)
-
-
-# Create new threads
-thread1 = myThread(1, "Generate Blocks")
-
-# Start new Threads
-thread1.start()
-thread1.join()
-
-
 def generate_block():
 	if len(Pending_Transactions) > 1:
 		temp = ""
@@ -78,17 +58,41 @@ def generate_block():
 
 		Pending_Transactions.clear()
 
-	# if response.status_code == 200:
-	# 	length = response.json()['length']
-	# 	self.nodes_set.update(response.json()['nodes'])
-	# 	return True
-	# else:
-	# 	return False
+
+# class myThread(threading.Thread):
+# 	def __init__(self, threadID, name):
+# 		threading.Thread.__init__(self)
+# 		self.threadID = threadID
+# 		self.name = name
+#
+# 	def run(self):
+# 		while True:
+# 			generate_block()
+# 			sleep(5)
+#
+#
+# # Create new threads
+# thread1 = myThread(1, "Generate Blocks")
+#
+# # Start new Threads
+# thread1.start()
+# thread1.join()
+
+
+# if response.status_code == 200:
+# 	length = response.json()['length']
+# 	self.nodes_set.update(response.json()['nodes'])
+# 	return True
+# else:
+# 	return False
 
 
 def add_transaction(trans_str):
 	transaction_hash = sha256(trans_str.encode()).hexdigest()
 	Pending_Transactions.append(transaction_hash)
+
+
+##############################################################################
 
 
 def allowed_file(filename):
@@ -597,6 +601,7 @@ def register_new_nodes():
 
 	return jsonify(response), 200
 
+
 @app.route('/semaphore', methods=['POST', 'GET'])
 def semaphore_update():
 	# nodes_set.add(request.host_url)
@@ -616,6 +621,18 @@ def semaphore_update():
 			'entry': False
 		}
 		return jsonify(response), 200
+
+
+@app.before_first_request
+def activate_job():
+	def run_job():
+		while True:
+			print("Thread Started")
+			generate_block()
+			sleep(3)
+
+	thread = threading.Thread(target=run_job)
+	thread.start()
 
 
 if __name__ == '__main__':
