@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Generate New Contract</title>
+</head>
+<body>
+
+    <h1>Create Contract</h1>
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.distributorAPI.label }}<br>
+            {{ form.distributorAPI(size=32) }}
+        </p>
+        <p>
+            {{ form.producerID.label }}<br>
+            {{ form.producerID(size=32) }}
+        </p>
+        <p>
+            {{ form.albumID.label }}<br>
+            {{ form.albumID(size=32) }}
+        </p>
+        <p>
+            {{ form.amount_per_access.label }}<br>
+            {{ form.amount_per_access(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+</body>
+</html>
