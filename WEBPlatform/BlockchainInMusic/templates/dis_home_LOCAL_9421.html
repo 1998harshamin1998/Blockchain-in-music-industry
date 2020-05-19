@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Blockchain In Music</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Muli:300,400,700,900" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/fonts/icomoon/style.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/jquery-ui.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/owl.carousel.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/owl.theme.default.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/owl.theme.default.min.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/jquery.fancybox.min.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/bootstrap-datepicker.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/fonts/flaticon/font/flaticon.css') }}">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/aos.css') }}">
+  <link href="{{ url_for('static', filename='producer_home/css/jquery.mb.YTPlayer.min.css') }}" media="all" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/style.css') }}">
+
+</head>
+
+
+<body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
+
+  <div class="site-wrap">
+
+    <div class="site-mobile-menu site-navbar-target">
+      <div class="site-mobile-menu-header">
+        <div class="site-mobile-menu-close mt-3">
+          <span class="icon-close2 js-menu-toggle"></span>
+        </div>
+      </div>
+      <div class="site-mobile-menu-body"></div>
+    </div>
+
+
+    <header class="site-navbar py-4 js-sticky-header site-navbar-target" role="banner">
+
+      <div class="container-fluid">
+        <div class="d-flex align-items-center">
+          <div class="site-logo"><a href="index.html">Blockchain In Music</a></div>
+          <div class="ml-auto">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+              <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                <li><a href="#home-section" class="nav-link">Home</a></li>
+                <li><a href="#classes-section" class="nav-link">Walkthrough</a></li>
+                <li><a href="#schedule-section" class="nav-link">Contracts</a></li>
+                <li><a href="#trainer-section" class="nav-link">Access Albums</a></li>
+                <li><a href="#services-section" class="nav-link">Payments</a></li>
+              </ul>
+            </nav>
+          </div>
+          <div class="ml-auto">
+            <nav class="site-navigation position-relative text-right" role="navigation">
+              <ul class="site-menu main-menu site-menu-dark js-clone-nav mr-auto d-none d-lg-block">
+                <li class="cta"><a href="{{ url_for('home') }}" class="nav-link"><span
+                      class="rounded border border-primary"><font color="red">Sign Out</font></span></a></li>
+              </ul>
+            </nav>
+            <a href="#" class="d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black float-right"><span
+                class="icon-menu h3"></span></a>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <a id="bgndVideo" class="player"
+      data-property="{videoURL:'https://www.youtube.com/watch?time_continue=181&v=fpViZkhpPHk',showYTLogo:false, showAnnotations: false, showControls: false, cc_load_policy: false, containment:'#home-section',autoPlay:true, mute:true, startAt:154, stopAt: 184, opacity:1}">
+    </a>
+
+    <div class="intro-section" id="home-section" style="background-color: #ccc;">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-8 mx-auto text-center" data-aos="fade-up">
+            <h1>Welcome</h1>
+            {% for name in names %}
+            <h1><font face='verdana' size='10' color='green'>{{ name }}</font></h1>
+            {% endfor %}
+        
+          </div>
+        </div>
+      </div>
+    </div>
+    {% block content %}
+      <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <font color='green'>{{ message }}</font>
+        </div>
+        {% endfor %}
+
+        {% block page_content %}{% endblock %}
+      </div>
+    {% endblock %}
+
+    <div class="site-section section-1">
+
+
+      <div class="container">
+
+        <div class="row mb-5">
+          <div class="col-lg-3">
+        
+            <div class="counter d-flex align-items-start mb-5" data-aos="fade-up" data-aos-delay="">
+              <div class="icon-wrap"><i class="material-icons" style="font-size:48px;color:green">description</i></div>
+              <div class="counter-text">
+                <strong>{{ contracts }}</strong>
+                <span>Available Contracts</span>
+              </div>
+            </div>
+        
+        
+          </div>
+          <div class="col-lg-3">
+            <div class="counter d-flex align-items-start" data-aos="fade-up" data-aos-delay="100">
+              <div class="icon-wrap"><i class="material-icons" style="font-size:48px;color:green">assignment_turned_in</i></div>
+              <div class="counter-text">
+                <strong>{{ ac_contracts }}</strong>
+                <span>Active Contracts </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+        
+            <div class="counter d-flex align-items-start mb-5" data-aos="fade-up" data-aos-delay="200">
+              <div class="icon-wrap"><i class="material-icons" style="font-size:48px;color:green">audiotrack</i></div>
+              <div class="counter-text">
+                <strong>{{ views }}</strong>
+                <span>Total Views</span>
+              </div>
+            </div>
+        
+          </div>
+          <div class="col-lg-3">
+            <div class="counter d-flex align-items-start" data-aos="fade-up" data-aos-delay="300">
+              <div class="icon-wrap"><i class="material-icons" style="font-size:48px;color:green">local_atm</i></div>
+              <div class="counter-text">
+                <strong>{{ revenue }}</strong>
+                <span>Revenue Distributed</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-5 mr-auto mb-5 align-self-center">
+
+            <div class="mb-5">
+              <h2 class="section-title">Accept a Contract Now!</h2>
+              <p class="mb-5"><b>Music is a form of art; an expression of emotions through harmonic frequencies. You as a Producer must excel in this art form to deliver your best to your fans. At the same time you must get fair commendations for each view to your art.</p>
+              <p class="mb-5">On this platform you can accept contracts from different producers to provide their music albums on your own application. Revenue Generation will be totally transparent as per contract terms and based on number of access to producers albums.</p></b>
+              <p>
+                <a href="{{ url_for('dis_accept_contract') }}" class="btn btn-primary smoothscroll py-3 px-4">Accept a Contract</a>
+              </p>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="image-absolute-box">
+             
+              <img src="{{ url_for('static', filename='producer_home/images/source1.gif') }}" alt="Image" class="img-fluid img-shadow">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="site-section section-2" id="classes-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-5">
+            <h2 class="section-title">How It Works?</h2>
+            <p>Producers start by registering on our platform. They create contracts of their albums and decide the per view royalty. Registered Distributors on our platform can then view those contracts and accept them as per their own choice. A request is generated for Producers. Upon accepting, contracts are then set as Active contracts. At the end of each cycle a new transaction block is added to the blockchain with transaction details as number of views or access to the albums made by people on distributors platform. Distributors then distribute the royalty to the producers as per contract. </p>
+          </div>
+        </div>
+
+      </div>
+      <div class="owl-carousel nonloop-block-13">
+
+        <a class="work-thumb" href="single.html">
+          <div class="work-text">
+            <h3><font color="green">STEP 1: </font><font color="black">Registeration</font></h3>
+            <span class="category"><font color="black">Producers and Distributors register on our platform.</font></span>
+          </div>
+          <img src="{{ url_for('static', filename='producer_home/images/slide_0.jpg') }}" alt="Image" class="img-fluid">
+        </a>
+
+        <a class="work-thumb" href="single.html">
+          <div class="work-text">
+            <h3><font color="green">STEP 2: </font><font color="black">Create Contract</font></h3>
+            <span class="category"><font color="black">Producers create new contracts of their albums and songs.</font></span>
+          </div>
+          <img src="{{ url_for('static', filename='producer_home/images/slide_1.jpg') }}" alt="Image" class="img-fluid">
+        </a>
+
+        <a class="work-thumb" href="single.html">
+          <div class="work-text">
+            <h3><font color="green">STEP 3: </font><font color="black">Confirmation Dialog</font></h3>
+            <span class="category"><font color="black">Distributors can accept those contracts upon which they are shown in producers confirmation dialog.</font></span>
+          </div>
+          <img src="{{ url_for('static', filename='producer_home/images/slide_2.jpg') }}" alt="Image" class="img-fluid">
+        </a>
+
+        <a class="work-thumb" href="single.html">
+          <div class="work-text">
+            <h3><font color="green">STEP 4: </font><font color="black">Active Contracts</font></h3>
+            <span class="category"><font color="black">When a contract is accepted by both producer and distributor, they are set as active contracts. Transaction logs with details such as number of access/views to the album are then stored in blocks of blockchain. This is done in transaction cycles.</font></span>
+          </div>
+          <img id='img_rotate' src="{{ url_for('static', filename='producer_home/images/slide_3.jpg') }}" alt="Image" class="img-fluid">
+        </a>
+
+        <a class="work-thumb" href="single.html">
+          <div class="work-text">
+            <h3><font color="green">STEP 5: </font><font color="black">Revenue Distribution</font></h3>
+            <span class="category"><font color="black">Fair revenue is given to the producer by the distributor as per contract terms. Revenue is generated automatically using details of the transaction block.</font></span>
+          </div>
+          <img src="{{ url_for('static', filename='producer_home/images/slide_4.png') }}" alt="Image" class="img-fluid">
+        </a>
+      </div>
+
+    </div>
+
+
+    <div class="site-section section-2" id="schedule-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-5">
+            <h2 class="section-title">Your Contracts</h2>
+            <p>Here you can view all your contracts in one place. Pending Contracts, Contract Confirmation Dialog and Active Contracts.</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <ul class="nav nav-tabs mb-5 border-bottom-0 justify-content-center tab-list-custom" id="myTab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="monday-tab" data-toggle="tab" href="#monday" role="tab" aria-controls="monday"
+                  aria-selected="true">Available Contracts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="tuesday-tab" data-toggle="tab" href="#tuesday" role="tab" aria-controls="tuesday"
+                  aria-selected="false">Active Contracts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="wednesday-tab" data-toggle="tab" href="#wednesday" role="tab" aria-controls="wednesday"
+                  aria-selected="false"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="wednesday-tab" data-toggle="tab" href="#wednesday" role="tab" aria-controls="wednesday"
+                  aria-selected="false"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="wednesday-tab" data-toggle="tab" href="#wednesday" role="tab" aria-controls="wednesday"
+                  aria-selected="false"></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="wednesday-tab" data-toggle="tab" href="#wednesday" role="tab" aria-controls="wednesday"
+                  aria-selected="false"></a>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="monday" role="tabpanel" aria-labelledby="monday-tab">
+                
+              </div>
+
+              <div class="tab-pane fade" id="tuesday" role="tabpanel" aria-labelledby="tuesday-tab">
+
+              </div>
+
+
+              <div class="tab-pane fade" id="wednesday" role="tabpanel" aria-labelledby="wednesday-tab">
+
+              </div>
+
+              <div class="tab-pane fade" id="thursday" role="tabpanel" aria-labelledby="thursday-tab">
+
+              </div>
+
+              <div class="tab-pane fade" id="friday" role="tabpanel" aria-labelledby="friday-tab">
+
+              </div>
+
+              <div class="tab-pane fade" id="sunday" role="tabpanel" aria-labelledby="sunday-tab">
+
+              </div>
+              
+              <div>
+                <p>
+                  <a href="{{ url_for('dis_accept_contract') }}" class="btn btn-primary smoothscroll py-3 px-4">Accept a Contract</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <div class="site-section" id="access-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-5">
+            <h2 class="section-title">Access Albums</h2>
+            <p>Here you can access all the albums that are under your active contracts. Each access generates a view. Payments to be made later are determined by these views.</p>
+          </div>
+        </div>
+        <div>
+          <p>
+            <a href="{{ url_for('dis_access_albums') }}" class="btn btn-primary smoothscroll py-3 px-4">Access Albums</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="site-section" id="services-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-5">
+            <h2 class="section-title">Make Payments</h2>
+            <p>Click on the Button below to make payments for the album access generated by your service. Revenue to be paid is calculated automatically based on contract data. Once Payment is successful, views for the specific contract are reset and a latest timestamp is added to record last payment.</p>
+          </div>
+        </div>
+        <div>
+          <p>
+            <a href="{{ url_for('dis_payment') }}" class="btn btn-primary smoothscroll py-3 px-4">Pay Now</a>
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="site-section bg-dark" id="contact-section">
+      <div class="container">
+
+        <div class="row justify-content-center">
+          <div class="col-md-7">
+
+
+
+            <h2 class="section-title mb-3">Your Api Key</h2>
+            <p class="mb-5">Note: This is your api Key for any queries - {{ apiKey }}</p>
+
+            <form method="post" data-aos="fade">
+              <div class="form-group row">
+                <div class="col-md-6 mb-3 mb-lg-0">
+                  <input type="text" class="form-control" placeholder="First name">
+                </div>
+                <div class="col-md-6">
+                  <input type="text" class="form-control" placeholder="Last name">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <input type="text" class="form-control" placeholder="Subject">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <input type="email" class="form-control" placeholder="Email">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <textarea class="form-control" id="" cols="30" rows="10"
+                    placeholder="Write your message here."></textarea>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-6">
+
+                  <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <footer class="footer-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h3>About Gymer</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro consectetur ut hic ipsum et veritatis
+              corrupti. Itaque eius soluta optio dolorum temporibus in, atque, quos fugit sunt sit quaerat dicta.</p>
+          </div>
+
+          <div class="col-md-3 ml-auto">
+            <h3>Links</h3>
+            <ul class="list-unstyled footer-links">
+              <li><a href="#">Home</a></li>
+              <li><a href="#">Meditation</a></li>
+              <li><a href="#">Gym</a></li>
+              <li><a href="#">Aerobatics</a></li>
+            </ul>
+          </div>
+
+          <div class="col-md-4">
+            <h3>Subscribe</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt incidunt iure iusto architecto?
+              Numquam, natus?</p>
+            <form action="#">
+              <div class="d-flex mb-5">
+                <input type="text" class="form-control rounded-0" placeholder="Email">
+                <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <div class="row pt-5 mt-5 text-center">
+          <div class="col-md-12">
+            <div class=" pt-5">
+              <p>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Copyright &copy;
+                <script>
+                  document.write(new Date().getFullYear());
+                </script> All rights reserved | This template is made with <i class="icon-heart"
+                  aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+
+
+  </div>
+  <!-- .site-wrap -->
+
+  <script src="{{ url_for('static', filename='producer_home/js/jquery-3.3.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery-migrate-3.0.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery-ui.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/popper.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/owl.carousel.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery.stellar.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery.countdown.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/bootstrap-datepicker.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery.easing.1.3.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/aos.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery.fancybox.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery.sticky.js') }}"></script>
+  <script src="{{ url_for('static', filename='producer_home/js/jquery.mb.YTPlayer.min.js') }}"></script>
+
+
+
+
+  <script src="{{ url_for('static', filename='producer_home/js/main.js') }}"></script>
+
+  <script>
+    $(document).ready(function() {
+        var available_contracts = {{ available_contracts | tojson }};
+        var active_contracts = {{ active_contracts | tojson }};
+        
+
+        // EXTRACT VALUE FOR HTML HEADER. 
+        // ('Book ID', 'Book Name', 'Category' and 'Price')
+        var col = [];
+        var col1=[];
+        for (var i = 0; i < available_contracts.length; i++) {
+            for (var key in available_contracts[i]) {
+                if (col.indexOf(key) === -1) {
+                    col.push(key);
+                }
+            }
+        }
+
+        for (var i = 0; i < active_contracts.length; i++) {
+            for (var key in active_contracts[i]) {
+                if (col1.indexOf(key) === -1) {
+                    col1.push(key);
+                }
+            }
+        }
+        
+
+        // CREATE DYNAMIC TABLE.
+        var table = document.createElement("table");
+        var table1= document.createElement("table");
+        table.setAttribute("id", "available_contracts");
+        table1.setAttribute("id", "active_contracts")
+        // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
+
+        var tr = table.insertRow(-1);                   // TABLE ROW.
+        var tr1 = table1.insertRow(-1);
+        
+        for (var i = 0; i < col.length; i++) {
+            var th = document.createElement("th");      // TABLE HEADER.
+            th.innerHTML = col[i];
+            tr.appendChild(th);
+        }
+
+        for (var i = 0; i < col1.length; i++) {
+            var th1 = document.createElement("th");      // TABLE HEADER.
+            th1.innerHTML = col1[i];
+            tr1.appendChild(th1);
+        }
+
+        // ADD JSON DATA TO THE TABLE AS ROWS.
+        for (var i = 0; i < available_contracts.length; i++) {
+
+            tr = table.insertRow(-1);
+
+            for (var j = 0; j < col.length; j++) {
+                var tabCell = tr.insertCell(-1);
+                tabCell.innerHTML = available_contracts[i][col[j]];
+            }
+        }
+
+        for (var i = 0; i < active_contracts.length; i++) {
+
+            tr1 = table1.insertRow(-1);
+
+            for (var j = 0; j < col1.length; j++) {
+                var tabCell1 = tr1.insertCell(-1);
+                tabCell1.innerHTML = active_contracts[i][col1[j]];
+            }
+
+        }
+
+        // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
+        var divContainer = document.getElementById("monday");
+        divContainer.innerHTML = "";
+        divContainer.appendChild(table);
+
+        var divContainer1 = document.getElementById("tuesday");
+        divContainer1.innerHTML = "";
+        divContainer1.appendChild(table1);
+
+        
+
+    });
+  </script>
+
+  <style type="text/css">
+    body            { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;}
+    a, h1, h2       { color: #377ba8; }
+    h1, h2          { margin: 0; }
+    h1              { border-bottom: 2px solid #eee; }
+    h2              { font-size: 1.2em; }
+
+    table, th, td {
+  border: solid;
+  border-bottom: 1px solid #C8C8C8;
+  border-collapse: collapse;
+  text-align:center;
+  padding: 10px;
+  margin-bottom: 40px;
+  font-size: 20px;
+  font-style: italic;
+  }
+    th {
+    background-color: #add8e6;
+    color: white;
+  }
+
+    tr:nth-child(odd)   { background-color:#eee; }
+    tr:nth-child(even)  { background-color:#fff; }
+
+    tr:hover            { background-color: #ffff99;}
+  </style>
+
+</body>
+
+</html>

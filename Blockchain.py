@@ -14,7 +14,7 @@ from contract import Contract
 import requests
 
 class Blockchain:
-    __Difficulty = 2
+    __Difficulty = 5
 
     def __init__(self):
 
@@ -77,10 +77,16 @@ class Blockchain:
         else:
             Block.blockHash = proof
         self.chain.append(Block)
-        for node in blockchain.nodes_set:
+        for node in self.nodes_set.copy():
             url = node + "resolve"
-            response = requests.get(url)
-
+            try:
+                response = requests.get(url)
+            except:
+                try:
+                    self.nodes_set.remove(node)
+                except KeyError:
+                    pass
+            continue
         return True
 
     def add_contract(self, contract):
@@ -95,6 +101,17 @@ class Blockchain:
         self.add_block(new_block, proof)
 
         return new_block.index
+
+    def mine_blocks(self, transaction, transaction_id):
+        last_block = self.last_block
+        new_block = Block(last_block.index + 1,
+                          transaction,
+                          last_block.blockHash)
+        proof = self.proof_of_work(new_block)
+        if Blockchain.update_Semaphore(transaction_id):
+            self.add_block(new_block, proof)
+            return new_block.index
+
 
 
     def valid_chain(self, chain):
@@ -125,28 +142,33 @@ class Blockchain:
 
         return True
 
-
     def resolve_chain_conflicts(self):
         neighbours = self.nodes_set
         new_chain = None
         max_length = len(self.chain)
-        for node in neighbours:
+        for node in neighbours.copy():
             app.logger.info('NODE IS: ' + node)
             print(node, sys.stderr)
             url = node + 'getchain'
-            response = requests.get(url)
+            try:
+                response = requests.get(url)
 
-            if response.status_code == 200:
-                length = response.json()['length']
-                chain = response.json()['chain']
-                print(length, sys.stderr)
-                print(chain, sys.stderr)
+                if response.status_code == 200:
+                    length = response.json()['length']
+                    chain = response.json()['chain']
+                    print(length, sys.stderr)
+                    print(chain, sys.stderr)
 
-                # Check if the length is longer and the chain is valid
-                if length > max_length and self.valid_chain(chain):
-                    max_length = length
-                    new_chain = chain
-
+                    # Check if the length is longer and the chain is valid
+                    if length > max_length and self.valid_chain(chain):
+                        max_length = length
+                        new_chain = chain
+            except:
+                try:
+                    neighbours.remove(node)
+                except KeyError:
+                    pass
+            continue
             # Replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
             self.chain = Blockchain.chain_decode(new_chain)
@@ -189,7 +211,20 @@ class Blockchain:
         else:
             return False
 
+    @staticmethod
+    def update_Semaphore(transaction_id):
+        url = 'http://localhost:5000/semaphore'
+        data = {
+                "transaction_id": transaction_id
+                }
 
+        headers = {'Content-Type': "application/json"}
+        response = requests.post(url, data=json.dumps(data), headers=headers)
+        if response.status_code == 200:
+            #length = response.json()['length']
+            return response.json()['entry']
+        else:
+            return False
 
 
 # Instantiate our Node
@@ -301,10 +336,16 @@ def register_nodes():
         'length': len(blockchain.nodes_set),
     }
 
-    for node in blockchain.nodes_set:
+    for node in blockchain.nodes_set.copy():
         url = node + "resolve_nodes"
-        response2 = requests.get(url)
-
+        try:
+            response2 = requests.get(url)
+        except:
+            try:
+                blockchain.nodes_set.remove(node)
+            except KeyError:
+                pass
+        continue
     return jsonify(response), 200
 
 
@@ -325,17 +366,36 @@ def consensus():
 
     return jsonify(response), 200
 
+@app.route('/mine', methods=['POST', 'GET'])
+def Mine():
+    transaction = request.get_json()["transaction"]
+    transaction_id = request.get_json()["transaction_id"]
+    blockchain.mine_blocks(transaction, transaction_id)
+
+    return redirect('/chain')
+
 
 @app.route('/resolve_nodes', methods=['GET'])
 def Nodesconsensus():
-
+    # transaction_id = request.get_json()["transaction_id"]
     response = blockchain.getNodes(request.host_url)
     response = {
-        'nodes': list(Blockchain.nodes_set),
-        'length': len(Blockchain.nodes_set),
+        'nodes': list(blockchain.nodes_set),
+        'length': len(blockchain.nodes_set),
     }
 
+    for node in blockchain.nodes_set.copy():
+        url = node + "resolve"
+        try:
+            response2 = requests.get(url)
+        except:
+            try:
+                blockchain.nodes_set.remove(node)
+            except KeyError:
+                pass
+        continue
     return jsonify(response), 200
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
