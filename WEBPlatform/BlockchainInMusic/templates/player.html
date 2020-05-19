@@ -1,0 +1,361 @@
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <title>Music player</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,400,700,900" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/fonts/icomoon/style.css') }}">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/owl.theme.default.min.css') }}">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/jquery.fancybox.min.css') }}">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/bootstrap-datepicker.css') }}">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/fonts/flaticon/font/flaticon.css') }}">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/aos.css') }}">
+    <link href="{{ url_for('static', filename='producer_home/css/jquery.mb.YTPlayer.min.css') }}" media="all" rel="stylesheet" type="text/css">
+  
+    <link rel="stylesheet" href="{{ url_for('static', filename='producer_home/css/style.css') }}">
+
+    <style>
+        html {
+    background-color: #272733;
+  }
+  
+  .main {
+    margin-left: 60%;
+    margin-top: 2%;
+  }
+  
+  .album {
+    margin-bottom: 25px;
+  }
+  
+  #musicCont {
+    background-color: #044154;
+    position: absolute;
+    z-index: 1;
+    width: 400px;
+    box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.2);
+    border-bottom: 4px solid #3594BA;
+  }
+  
+  .lift {
+    animation: lift 350ms forwards;
+  }
+  
+  @keyframes lift {
+    0% {
+      box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.2);
+      transform: scale(1);
+      transform: rotate(0deg);
+    }
+    100% {
+      box-shadow: 0px 25px 5px 9px rgba(0, 0, 0, 0.1);
+      transform: scale(1.03);
+      transform: rotate(.5deg);
+    }
+  }
+  
+  .settle {
+    animation: settle 200ms forwards;
+  }
+  
+  @keyframes settle {
+    0% {
+      box-shadow: 0px 25px 5px 9px rgba(0, 0, 0, 0.1);
+      transform: scale(1.03);
+      transform: rotate(.5deg);
+    }
+    100% {
+      box-shadow: 0px 5px 5px 5px rgba(0, 0, 0, 0.2);
+      transform: scale(1);
+      transform: rotate(0deg);
+    }
+  }
+  
+  .flex-container {
+    list-style: none;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    justify-content: space-around;
+  }
+  
+  .flex-item {
+    padding-bottom: 20px;
+    width: 300px;
+    height: 300px;
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  #audioplayer {
+    width: 300px;
+    height: 60px;
+  }
+  
+  .button {
+    height: 35px;
+    width: 35px;
+    border: none;
+    background-size: 50% 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    float: left;
+    outline: none;
+  }
+  
+  #timeline {
+    width: 240px;
+    height: 2px;
+    margin-right: 10px;
+    margin-top: 20px;
+    float: right;
+    border-radius: 15px;
+    background: #DBE3E3;
+  }
+  
+  #playhead {
+    width: 4px;
+    height: 10px;
+    margin-top: -4px;
+    background: #fff;
+    cursor: pointer;
+  }
+  
+  #playButton,
+  #pauseButton {
+    width: 10px;
+    margin-top: 4px;
+    margin-left: 10px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 0.5;
+    stroke-miterlimit: 10;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    animation: bounce 500ms alternate;
+  }
+  
+  @keyframes bounce {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.2);
+    }
+  }
+  
+  #artistNameAlbum {
+    display: inline-block;
+    position: absolute;
+    left: 140px;
+    padding: 10px;
+    color: white;
+    font-family: Helvetica;
+    font-weight: 300;
+    font-size: 14px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+  
+  .ui-widget-content {
+    width: 400px;
+    height: 400px;
+    border: none;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  
+  #handle {
+    position: absolute;
+    display: inline-block;
+    cursor: all-scroll;
+    left: 190px;
+    top: 415px;
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  li {
+    list-style: none;
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background-color: #1D6B87;
+  }
+  
+  ul {
+    margin: 0px;
+    padding: 0px;
+  }
+  
+  h1{
+    position: relative;
+    top: -438px;
+    left: 15%;
+    font-family: Helvetica;
+    color: rgba(29, 107, 135, .2)
+  }
+  
+  .bgText{
+    width: 54%;
+    z-index: -2;
+    font-size: 22px;
+  }
+    </style>
+</head>
+
+<body>
+  <div id="song_details">
+      <p style="padding-left: 25px;padding-top: 30px">
+        <a href="{{ url_for('dis_home') }}" class="btn btn-primary smoothscroll py-3 px-4">Return Home</a>
+      </p>  
+  </div>
+
+  <div id="songs">
+        
+  </div>
+
+
+   
+<script>
+    var container = document.getElementById("songs");
+    var container1 = document.getElementById("song_details");
+        
+    var urls = {{ urls | tojson }};
+    var alb_art = {{ alb_art | tojson }};
+    var pro_name = {{ pro_name | tojson }};
+    var song_names = {{ song_names | tojson }};
+    var alb_name = {{ alb_name | tojson }};
+    
+    for( i=0; i<urls.length; i++){
+        container.insertAdjacentHTML('afterbegin','<audio id="music" preload="true"> <source src="'+urls[i]+'"> </audio>'+
+            '<div class="main"><div id="draggable" class="ui-widget-content"><div id="musicCont" class="flex-container settle"><div id="artistNameAlbum"></div>'+
+            '<div id="albumCont" class="flex-item album flex-container"><img id="currentAlbum" class="flex-item" src="'+alb_art[0]+'"></div>'+
+            '<div id="audioplayer"><svg id="playButton" class="button" onclick="play()" x="0px" y="0px" width="4.5px" height="6.9px" viewBox="0 0 4.5 6.9" style="enable-background:new 0 0 4.5 6.9;"><polyline class="button" points="0.6,0.3 3.9,3.4 0.6,6.6 "/></svg>'+
+            '<svg id="pauseButton" class="button" onclick="pause()" x="0px" y="0px" width="4.5px" height="6.9px" viewBox="0 0 4.5 6.9" style="enable-background:new 0 0 4.5 6.9;"><g><line class="st0" x1="0.4" y1="0.1" x2="0.4" y2="6.8"/><line class="st0" x1="4.1" y1="0.1" x2="4.1" y2="6.8"/></g></svg>'+
+            '<div id="timeline"><div id="playhead"></div></div></div></div><div id="sliderCont" class="flex-item"><div id="slider"><span></span></div></div></div></div>');
+        
+        container1.insertAdjacentHTML('beforeend', '<h2 class="section-title" style="padding-left: 50px;padding-top: 40px">'+song_names[i]+ '</h2>');
+        container1.insertAdjacentHTML('beforeend', '<h3 style="padding-left: 50px;padding-top: 10px">Artist  -  '+pro_name[0]+ '</h3>');
+        container1.insertAdjacentHTML('beforeend', '<h3 style="padding-left: 50px;padding-top: 10px">Album  -  '+alb_name[0]+ '</h3>');
+        //container.insertAdjacentHTML('beforeend','<div class="main"><div id="draggable" class="ui-widget-content"><div id="musicCont" class="flex-container settle"><div id="artistNameAlbum"><p>Mogwai | Kappa</p></div>')
+        //container.insertAdjacentHTML('beforeend','<div id="albumCont" class="flex-item album flex-container"><img id="currentAlbum" class="flex-item" src="http://cache.swdlive.com/image/test/resize_1375300602.jpg"></div>')
+        //container.insertAdjacentHTML('beforeend','<div id="audioplayer"><svg id="playButton" class="button" onclick="play()" x="0px" y="0px" width="4.5px" height="6.9px" viewBox="0 0 4.5 6.9" style="enable-background:new 0 0 4.5 6.9;"><polyline class="button" points="0.6,0.3 3.9,3.4 0.6,6.6 "/></svg>')
+        //container.insertAdjacentHTML('beforeend','<svg id="pauseButton" class="button" onclick="pause()" x="0px" y="0px" width="4.5px" height="6.9px" viewBox="0 0 4.5 6.9" style="enable-background:new 0 0 4.5 6.9;"><g><line class="st0" x1="0.4" y1="0.1" x2="0.4" y2="6.8"/><line class="st0" x1="4.1" y1="0.1" x2="4.1" y2="6.8"/></g></svg>')
+        //container.insertAdjacentHTML('beforeend', '<div id="timeline"><div id="playhead"></div></div></div></div><div id="sliderCont" class="flex-item"><div id="slider"><span></span></div></div></div></div>')
+    }
+</script>
+
+
+<script>
+    var music = document.getElementById('music');
+    var duration;
+    var playButton = document.getElementById('playButton');
+    var pauseButton = document.getElementById('pauseButton');
+    var playhead = document.getElementById('playhead');
+    var timeline = document.getElementById('timeline');
+    var timelineWidth = timeline.offsetWidth - playhead.offsetWidth;
+
+    music.addEventListener("timeupdate", timeUpdate, false);
+
+    timeline.addEventListener("click", function(event) {
+    moveplayhead(event);
+    music.currentTime = duration * clickPercent(event);
+    }, false);
+
+    function clickPercent(e) {
+    console.log(e);
+    return (e.pageX - timeline.offsetLeft) / timelineWidth;
+    }
+
+    playhead.addEventListener('mousedown', mouseDown, false);
+    window.addEventListener('mouseup', mouseUp, false);
+
+    var onplayhead = false;
+
+    function mouseDown() {
+    onplayhead = true;
+    window.addEventListener('mousemove', moveplayhead, true);
+    music.removeEventListener('timeupdate', timeUpdate, false);
+    }
+
+    function mouseUp(e) {
+    if (onplayhead == true) {
+        moveplayhead(e);
+        window.removeEventListener('mousemove', moveplayhead, true);
+        music.currentTime = duration * clickPercent(e);
+        music.addEventListener('timeupdate', timeUpdate, false);
+    }
+    onplayhead = false;
+    }
+
+    function moveplayhead(e) {
+    var newMargLeft = e.pageX - timeline.offsetLeft;
+    if (newMargLeft >= 0 && newMargLeft <= timelineWidth) {
+        playhead.style.marginLeft = newMargLeft + "px";
+    }
+    if (newMargLeft < 0) {
+        playhead.style.marginLeft = "0px";
+    }
+    if (newMargLeft > timelineWidth) {
+        playhead.style.marginLeft = timelineWidth + "px";
+    }
+    }
+
+    function timeUpdate() {
+    var playPercent = timelineWidth * (music.currentTime / duration);
+    playhead.style.marginLeft = playPercent + "px";
+    }
+
+    function play() {
+    if (music.paused) {
+        music.play();
+    }
+    }
+
+    function pause() {
+    if (music.play) {
+        music.pause();
+    }
+    }
+
+    music.addEventListener("canplaythrough", function() {
+    duration = music.duration;
+    }, false);
+
+    $("#draggable").draggable({
+    handle: "#handle"
+    });
+
+    $(function() {
+    $("#draggable").draggable();
+    });
+
+    $("#handle").mousedown(function() {
+    $("#musicCont").removeClass("settle");
+    $("#musicCont").addClass("lift");
+    });
+
+    $("#handle").mouseup(function() {
+    $("#musicCont").removeClass("lift");
+    $("#musicCont").addClass("settle");
+    });
+</script>
+
+
+
+    
+</body>
+</html>

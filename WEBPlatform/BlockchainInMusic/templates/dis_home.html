@@ -55,7 +55,7 @@
                 <li><a href="#home-section" class="nav-link">Home</a></li>
                 <li><a href="#classes-section" class="nav-link">Walkthrough</a></li>
                 <li><a href="#schedule-section" class="nav-link">Contracts</a></li>
-                <li><a href="#trainer-section" class="nav-link">Access Albums</a></li>
+                <li><a href="#access-section" class="nav-link">Access Albums</a></li>
                 <li><a href="#services-section" class="nav-link">Payments</a></li>
               </ul>
             </nav>
@@ -63,7 +63,7 @@
           <div class="ml-auto">
             <nav class="site-navigation position-relative text-right" role="navigation">
               <ul class="site-menu main-menu site-menu-dark js-clone-nav mr-auto d-none d-lg-block">
-                <li class="cta"><a href="{{ url_for('home') }}" class="nav-link"><span
+                <li class="cta"><a href="{{ url_for('sign_out') }}" class="nav-link"><span
                       class="rounded border border-primary"><font color="red">Sign Out</font></span></a></li>
               </ul>
             </nav>
@@ -321,6 +321,12 @@
             <a href="{{ url_for('dis_access_albums') }}" class="btn btn-primary smoothscroll py-3 px-4">Access Albums</a>
           </p>
         </div>
+
+        <div class="row large-gutters">
+          <div class="col-md-6 person col-lg-4 mb-4 mb-lg-0" id="albums">
+          </div> 
+        </div>
+        
       </div>
     </div>
 
@@ -402,31 +408,24 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <h3>About Gymer</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro consectetur ut hic ipsum et veritatis
-              corrupti. Itaque eius soluta optio dolorum temporibus in, atque, quos fugit sunt sit quaerat dicta.</p>
+            <h3>About Us</h3>
+            <p>We developers are trying to provide a platform for producers and distributors. Producers can Upload their new albums and create contracts, Distributors can access and choose to accept the contract 
+              and then get the rights to share producers album on their own platform. Each access validates that royalty is generated automatically as per contract terms. 
+            </p>
           </div>
 
           <div class="col-md-3 ml-auto">
-            <h3>Links</h3>
-            <ul class="list-unstyled footer-links">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Meditation</a></li>
-              <li><a href="#">Gym</a></li>
-              <li><a href="#">Aerobatics</a></li>
-            </ul>
+            <h2 class="section-title mb-3">Fair Pay</h2>
+            <h2 class="section-title mb-3">Fair Play</h2>
+            <h3 class="section-title mb-3">Eat</h3>
+            <h3 class="section-title mb-3">Sleep</h3>
+            <h3 class="section-title mb-3">Produce</h3>
+            <h3 class="section-title mb-3">Repeat</h3>
           </div>
 
           <div class="col-md-4">
-            <h3>Subscribe</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt incidunt iure iusto architecto?
-              Numquam, natus?</p>
-            <form action="#">
-              <div class="d-flex mb-5">
-                <input type="text" class="form-control rounded-0" placeholder="Email">
-                <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
-              </div>
-            </form>
+            <h3>Backend Blockchain</h3>
+            <p>Each Payment is a transaction which is also recorded by our backend blockchain. End of each cycle a block containing all the transaction data is added to our blockchain server. This is an absolute record for all royalty distribution.</p>
           </div>
 
         </div>
@@ -474,6 +473,15 @@
 
 
   <script src="{{ url_for('static', filename='producer_home/js/main.js') }}"></script>
+
+  <script>
+    var container = document.getElementById("albums");
+    var urls = {{ album_arts | tojson }};
+    var album_names= {{ albums | tojson }};
+    for( i=0; i<urls.length; i++){
+      container.insertAdjacentHTML('beforeend', '<img src="'+urls[i]+'" alt="Image" class="img-fluid mb-5"><h3>'+album_names[i]+'</h3> ');
+    }
+  </script>
 
   <script>
     $(document).ready(function() {

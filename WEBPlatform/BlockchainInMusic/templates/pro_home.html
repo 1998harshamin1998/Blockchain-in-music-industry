@@ -55,15 +55,15 @@
                 <li><a href="#home-section" class="nav-link">Home</a></li>
                 <li><a href="#classes-section" class="nav-link">Walkthrough</a></li>
                 <li><a href="#schedule-section" class="nav-link">My Contracts</a></li>
-                <li><a href="#trainer-section" class="nav-link">Your Albums</a></li>
-                <li><a href="#services-section" class="nav-link">Services</a></li>
+                <li><a href="#trainer-section" class="nav-link">My Albums</a></li>
+                <li><a href="#services-section" class="nav-link">Terminate Contracts</a></li>
               </ul>
             </nav>
           </div>
           <div class="ml-auto">
             <nav class="site-navigation position-relative text-right" role="navigation">
               <ul class="site-menu main-menu site-menu-dark js-clone-nav mr-auto d-none d-lg-block">
-                <li class="cta"><a href="{{ url_for('home') }}" class="nav-link"><span
+                <li class="cta"><a href="{{ url_for('sign_out') }}" class="nav-link"><span
                       class="rounded border border-primary"><font color="red">Sign Out</font></span></a></li>
               </ul>
             </nav>
@@ -118,7 +118,7 @@
               <div class="icon-wrap"><i class="material-icons" style="font-size:48px;color:green">description</i></div>
               <div class="counter-text">
                 <strong>{{ contracts }}</strong>
-                <span>Your Contracts</span>
+                <span>Pending Contracts</span>
               </div>
             </div>
         
@@ -312,7 +312,7 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-6 mb-5">
-            <h2 class="section-title">Your Albums</h2>
+            <h2 class="section-title">My Albums</h2>
             <p>All your added albums can be viewed here. You can also add new albums, songs.</p>
             <p>
               <a href="{{ url_for('pro_add_album') }}" class="btn btn-primary smoothscroll py-3 px-4">Add Album</a>
@@ -331,79 +331,21 @@
       <div class="container">
         <div class="row">
           <div class="col-lg-6 mb-5">
-            <h2 class="section-title">Our Featured Services</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-              voluptatibus animi aspernatur ducimus quas obcaecati mollitia quibusdam temporibus culpa dolore molestias
-              blanditiis consequuntur
-              sunt nisi.</p>
+            <h2 class="section-title">Terminate</h2>
+            <p>You can deactivate pending contracts. Click on the button below and select a contract to terminate.</p>
           </div>
         </div>
-
-      </div>
-
-      <div class="container">
-
-        <div class="owl-carousel nonloop-block-14">
-
-          <div class="service">
-            <div>
-              <span class="flaticon-muscle display-3 text-white mb-4 d-inline-block"></span>
-              <h3>Weight Lifting</h3>
-              <span></span>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-                voluptatibus animi.</p>
-            </div>
-          </div>
-
-
-          <div class="service">
-            <div>
-              <span class="flaticon-stationary-bike display-3 text-white mb-4 d-inline-block"></span>
-              <h3>Meditation</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-                voluptatibus animi.</p>
-            </div>
-          </div>
-
-          <div class="service">
-            <div>
-              <span class="flaticon-banana display-3 text-white mb-4 d-inline-block"></span>
-              <h3>Crossfit</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-                voluptatibus animi.</p>
-            </div>
-          </div>
-
-          <div class="service">
-            <div>
-              <span class="flaticon-heart display-3 text-white mb-4 d-inline-block"></span>
-              <h3>Aerobics</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-                voluptatibus animi.</p>
-            </div>
-          </div>
-
-          <div class="service">
-            <div>
-              <span class="flaticon-scale display-3 text-white mb-4 d-inline-block"></span>
-              <h3>Gym</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-                voluptatibus animi.</p>
-            </div>
-          </div>
-
-          <div class="service">
-            <div>
-              <span class="flaticon-weight display-3 text-white mb-4 d-inline-block"></span>
-              <h3>Circling</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem possimus distinctio ex. Natus totam
-                voluptatibus animi.</p>
-            </div>
-          </div>
-
-
-
+        <div>
+          <p>
+            <a href="{{ url_for('pro_terminate_contract') }}" class="btn btn-primary smoothscroll py-3 px-4">Terminate Contract</a>
+          </p>
         </div>
+
+        <div class="row large-gutters">
+          <div class="col-md-6 person col-lg-4 mb-4 mb-lg-0" id="albums">
+          </div> 
+        </div>
+        
       </div>
 
     </div>
@@ -417,9 +359,8 @@
 
 
 
-            <h2 class="section-title mb-3">Contact Us</h2>
-            <p class="mb-5">Natus totam voluptatibus animi aspernatur ducimus quas obcaecati mollitia quibusdam
-              temporibus culpa dolore molestias blanditiis consequuntur sunt nisi.</p>
+            <h2 class="section-title mb-3">Your Api Key</h2>
+            <p class="mb-5">Note: This is your api Key for any queries - {{ apiKey }}</p>
 
             <form method="post" data-aos="fade">
               <div class="form-group row">
@@ -468,31 +409,24 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4">
-            <h3>About Gymer</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro consectetur ut hic ipsum et veritatis
-              corrupti. Itaque eius soluta optio dolorum temporibus in, atque, quos fugit sunt sit quaerat dicta.</p>
+            <h3>About Us</h3>
+            <p>We developers are trying to provide a platform for producers and distributors. Producers can Upload their new albums and create contracts, Distributors can access and choose to accept the contract 
+              and then get the rights to share producers album on their own platform. Each access validates that royalty is generated automatically as per contract terms. 
+            </p>
           </div>
 
           <div class="col-md-3 ml-auto">
-            <h3>Links</h3>
-            <ul class="list-unstyled footer-links">
-              <li><a href="#">Home</a></li>
-              <li><a href="#">Meditation</a></li>
-              <li><a href="#">Gym</a></li>
-              <li><a href="#">Aerobatics</a></li>
-            </ul>
+            <h2 class="section-title mb-3">Fair Pay</h2>
+            <h2 class="section-title mb-3">Fair Play</h2>
+            <h3 class="section-title mb-3">Eat</h3>
+            <h3 class="section-title mb-3">Sleep</h3>
+            <h3 class="section-title mb-3">Produce</h3>
+            <h3 class="section-title mb-3">Repeat</h3>
           </div>
 
           <div class="col-md-4">
-            <h3>Subscribe</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nesciunt incidunt iure iusto architecto?
-              Numquam, natus?</p>
-            <form action="#">
-              <div class="d-flex mb-5">
-                <input type="text" class="form-control rounded-0" placeholder="Email">
-                <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
-              </div>
-            </form>
+            <h3>Backend Blockchain</h3>
+            <p>Each Payment is a transaction which is also recorded by our backend blockchain. End of each cycle a block containing all the transaction data is added to our blockchain server. This is an absolute record for all royalty distribution.</p>
           </div>
 
         </div>

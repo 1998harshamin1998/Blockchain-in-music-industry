@@ -66,6 +66,16 @@
 					</div>
 				</div>
 
+				<div class="wrap-input100 input100-select bg1">
+					<span class="label-input100">Select a Song *</span>
+					<div>
+						<select class="js-select2" name="song_name" id="select_song">
+
+						</select>
+						<div class="dropDownSelect2"></div>
+					</div>
+				</div>
+
 
                 <div class="wrap-input100 bg1 rs1-wrap-input100">
 					<span class="label-input100">Album ID *</span>
@@ -143,9 +153,12 @@
 
 <script>
     var container = document.getElementById("select_album");
+	
     var album_names= {{ album_names | tojson }};
+	
     
     container.insertAdjacentHTML('beforeend', '<option disabled selected value>-- select an option --</option>')
+	
     for( i=0; i<album_names.length; i++){
       container.insertAdjacentHTML('beforeend', '<option>'+album_names[i]+'</option>');
     }
@@ -154,11 +167,18 @@
 
 <script>
 	$("#select_album").on("change", function() {
+		var container1 = document.getElementById("select_song");
 		var album_names= {{ album_names | tojson }};
     	var album_ids= {{ album_ids | tojson }};
         var art_name= {{ art_name | tojson }};
+		var song_names = {{ song_names | tojson }};
+
+		container1.innerHTML='<option disabled selected value>-- select an option --</option>';
 
 		var n=album_names.indexOf($("#select_album").val());
+		for( i=0; i<song_names[n].length; i++){
+      		container1.insertAdjacentHTML('beforeend', '<option>'+song_names[n][i]+'</option>');
+    	}
 		$("#alb_id").val(album_ids[n]);
         $('#art_name').val(art_name[n]);
 		

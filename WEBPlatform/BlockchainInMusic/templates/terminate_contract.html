@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Terminate a Contract</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{{ url_for('static', filename='contract/images/icons/favicon.ico') }}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/bootstrap/css/bootstrap.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/fonts/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/fonts/iconic/css/material-design-iconic-font.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/animate/animate.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/css-hamburgers/hamburgers.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/animsition/css/animsition.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/select2/select2.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/daterangepicker/daterangepicker.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/vendor/noui/nouislider.min.css') }}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/css/util.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contract/css/main.css') }}">
+<!--===============================================================================================-->
+</head>
+<body>
+
+
+	<div class="container-contact100">
+		<div class="wrap-contact100">
+			<form class="contact100-form validate-form" method="POST" enctype="multipart/form-data">
+				{% block content %}
+                        <div class="container">
+                            {% for message in get_flashed_messages() %}
+                            <div class="alert alert-warning">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <font color='red'>{{ message }}</font>
+                            </div>
+                            {% endfor %}
+
+                            {% block page_content %}{% endblock %}
+                        </div>
+                {% endblock %}
+				<span class="contact100-form-title">
+					Select Contract to Terminate
+				</span>
+
+				<div class="wrap-input100 input100-select bg1">
+					<span class="label-input100">Select a Contract *</span>
+					<div>
+						<select class="js-select2" name="contract_name" id="select_contract">
+
+						</select>
+						<div class="dropDownSelect2"></div>
+					</div>
+				</div>
+
+				<div class="wrap-input100 validate-input bg1 rs1-wrap-input100" data-validate = "Enter Your Email (e@a.x)">
+					<span class="label-input100">Email *</span>
+					<input class="input100" type="text" name="email" placeholder="Enter Your Email ">
+				</div>
+
+				<div class="wrap-input100 bg1 rs1-wrap-input100">
+					<span class="label-input100">Password *</span>
+					<input class="input100" type="Password" name="pass" placeholder="Enter Password">
+				</div>
+
+				<div class="wrap-input100 bg1 rs1-wrap-input100">
+					<span class="label-input100">Album Name </span>
+					<input id="alb_name" class="input100" type="text" name="album_name" disabled>
+				</div>
+
+				<div class="wrap-input100 bg1 rs1-wrap-input100">
+					<span class="label-input100">Artist Name </span>
+					<input id="art_name" class="input100" type="text" name="artist_name" disabled>
+				</div>
+
+				<div class="wrap-input100 bg1 rs1-wrap-input100">
+					<span class="label-input100">Revenue ( $ per view ) *</span>
+					<input id="rev_per_view" class="input100" type="number" name="revenue" disabled>
+				</div>
+
+
+				<div class="container-contact100-form-btn">
+					<button class="contact100-form-btn" type="submit">
+						<span>
+							Confirm Termination
+							<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+						</span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/jquery/jquery-3.2.1.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/animsition/js/animsition.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/bootstrap/js/popper.js') }}"></script>
+	<script src="{{ url_for('static', filename='contract/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/select2/select2.min.js') }}"></script>
+	<script>
+		$(".js-select2").each(function(){
+			$(this).select2({
+				minimumResultsForSearch: 20,
+				dropdownParent: $(this).next('.dropDownSelect2')
+			});
+
+
+			$(".js-select2").each(function(){
+				$(this).on('select2:close', function (e){
+					if($(this).val() == "Please chooses") {
+						$('.js-show-service').slideUp();
+					}
+					else {
+						$('.js-show-service').slideUp();
+						$('.js-show-service').slideDown();
+					}
+				});
+			});
+		})
+	</script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/daterangepicker/moment.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='contract/vendor/daterangepicker/daterangepicker.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/countdowntime/countdowntime.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/vendor/noui/nouislider.min.js') }}"></script>
+<!--===============================================================================================-->
+	<script src="{{ url_for('static', filename='contract/js/main.js') }}"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+<script>
+    var container = document.getElementById("select_contract");
+    var contracts= {{ contracts | tojson }};
+    var albums= {{ albums | tojson }};
+    var revenue= {{ revenue | tojson }};
+    var artists= {{ artists | tojson }};
+    
+    container.insertAdjacentHTML('beforeend', '<option disabled selected value>-- select an option --</option>')
+    for( i=0; i<contracts.length; i++){
+      container.insertAdjacentHTML('beforeend', '<option>'+contracts[i]+'</option>');
+    }
+</script>
+
+
+<script>
+	$("#select_contract").on("change", function() {
+		var contracts= {{ contracts | tojson }};
+    	var albums= {{ albums | tojson }};
+    	var revenue= {{ revenue | tojson }};
+    	var artists= {{ artists | tojson }};
+		var n=contracts.indexOf($("#select_contract").val());
+		$("#rev_per_view").val(revenue[n]);
+		$("#alb_name").val(albums[n]);
+		$("#art_name").val(artists[n]);
+	});
+</script>
+
+</body>
+</html>
