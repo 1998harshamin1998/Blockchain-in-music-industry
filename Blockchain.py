@@ -77,10 +77,16 @@ class Blockchain:
         else:
             Block.blockHash = proof
         self.chain.append(Block)
-        for node in blockchain.nodes_set:
+        for node in self.nodes_set.copy():
             url = node + "resolve"
-            response = requests.get(url)
-
+            try:
+                response = requests.get(url)
+            except:
+                try:
+                    self.nodes_set.remove(node)
+                except KeyError:
+                    pass
+            continue
         return True
 
     def add_contract(self, contract):
@@ -140,23 +146,29 @@ class Blockchain:
         neighbours = self.nodes_set
         new_chain = None
         max_length = len(self.chain)
-        for node in neighbours:
+        for node in neighbours.copy():
             app.logger.info('NODE IS: ' + node)
             print(node, sys.stderr)
             url = node + 'getchain'
-            response = requests.get(url)
+            try:
+                response = requests.get(url)
 
-            if response.status_code == 200:
-                length = response.json()['length']
-                chain = response.json()['chain']
-                print(length, sys.stderr)
-                print(chain, sys.stderr)
+                if response.status_code == 200:
+                    length = response.json()['length']
+                    chain = response.json()['chain']
+                    print(length, sys.stderr)
+                    print(chain, sys.stderr)
 
-                # Check if the length is longer and the chain is valid
-                if length > max_length and self.valid_chain(chain):
-                    max_length = length
-                    new_chain = chain
-
+                    # Check if the length is longer and the chain is valid
+                    if length > max_length and self.valid_chain(chain):
+                        max_length = length
+                        new_chain = chain
+            except:
+                try:
+                    neighbours.remove(node)
+                except KeyError:
+                    pass
+            continue
             # Replace our chain if we discovered a new, valid chain longer than ours
         if new_chain:
             self.chain = Blockchain.chain_decode(new_chain)
@@ -324,10 +336,16 @@ def register_nodes():
         'length': len(blockchain.nodes_set),
     }
 
-    for node in blockchain.nodes_set:
+    for node in blockchain.nodes_set.copy():
         url = node + "resolve_nodes"
-        response2 = requests.get(url)
-
+        try:
+            response2 = requests.get(url)
+        except:
+            try:
+                blockchain.nodes_set.remove(node)
+            except KeyError:
+                pass
+        continue
     return jsonify(response), 200
 
 
@@ -366,6 +384,16 @@ def Nodesconsensus():
         'length': len(blockchain.nodes_set),
     }
 
+    for node in blockchain.nodes_set.copy():
+        url = node + "resolve"
+        try:
+            response2 = requests.get(url)
+        except:
+            try:
+                blockchain.nodes_set.remove(node)
+            except KeyError:
+                pass
+        continue
     return jsonify(response), 200
 
 

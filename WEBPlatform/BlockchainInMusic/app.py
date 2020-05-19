@@ -9,6 +9,7 @@ from hashlib import sha256
 import json
 import threading
 from time import sleep
+import pickle
 import requests
 import random
 
@@ -37,25 +38,53 @@ storage = firebase.storage()
 
 #############################################################################################
 
-nodes_set = set()  # A set to save list of nodes in the distributed network
+global nodes_set  # A set to save list of nodes in the distributed network
+nodes_set = set()
+global Pending_Transactions
 Pending_Transactions = []  # A list to store pending transactions
 semaphore = {}  # dictionary for blockchain critical section
 
 
 def generate_block():
-	if len(Pending_Transactions) > 1:
+	global Pending_Transactions
+	if len(Pending_Transactions) > 0:
+		global nodes_set
 		temp = ""
+		# temp_nodes = nodes_set
 		for t in Pending_Transactions:
 			temp += t
 
 		transaction_id = sha256(temp.encode()).hexdigest()
-		for node in nodes_set:
+		for node in nodes_set.copy():
 			url = node + "mine"
 			data = {"transaction": Pending_Transactions,
 			        "transaction_id": transaction_id
 			        }
 			headers = {'Content-Type': "application/json"}
-			response = requests.post(url, data=json.dumps(data), headers=headers)
+			try:
+				response = requests.post(url, data=json.dumps(data), headers=headers)
+			except:
+				print("Node dead")
+				try:
+					nodes_set.remove(node)
+				except KeyError:
+					pass
+			continue
+
+		# nodes_set = temp_nodes
+
+		for node in nodes_set.copy():
+			try:
+				url = node + "resolve_nodes"
+				response2 = requests.get(url)
+			except:
+				print("Node dead")
+				try:
+					nodes_set.remove(node)
+				except KeyError:
+					pass
+			continue
+		# nodes_set = temp_nodes
 
 		Pending_Transactions.clear()
 
@@ -89,8 +118,20 @@ def generate_block():
 
 
 def add_transaction(trans_str):
+	global Pending_Transactions
 	transaction_hash = sha256(trans_str.encode()).hexdigest()
 	Pending_Transactions.append(transaction_hash)
+
+def savedata(node_list):
+	with open('nodes_list.data', 'wb') as handle:
+		pickle.dump(node_list, handle)
+
+
+def loadNodes():
+	global nodes_set
+	with open('nodes_list.data', 'rb') as handle:
+		nodes_set = pickle.load(handle)
+	print(nodes_set)
 
 
 ##############################################################################
@@ -330,6 +371,7 @@ def dis_home():
 				                            "Revenue ( $ / view )": i['revenue'], "Timestamp": i['timestamp'],
 				                            "Producer Name ": db.child('producers').child(i['pro_id']).get().val()[
 					                            'name']})
+
 	if db.child('active_contracts').get().val():
 		for i in db.child('active_contracts').get().val().values():
 			if i['dis_id'] == str(localId):
@@ -805,8 +847,10 @@ def sign_out():
 
 @app.route('/sendnodes', methods=['POST', 'GET'])
 def register_new_nodes():
+	global nodes_set
 	# nodes_set.add(request.host_url)
 	nodes_set.add(request.get_json()["node_address"])
+	savedata(nodes_set)
 	response = {
 		'nodes': list(nodes_set),
 		'length': len(nodes_set),
@@ -817,6 +861,7 @@ def register_new_nodes():
 
 @app.route('/semaphore', methods=['POST', 'GET'])
 def semaphore_update():
+	global nodes_set
 	# nodes_set.add(request.host_url)
 	transactionId = request.get_json()["transaction_id"]
 	if transactionId not in semaphore.keys():
@@ -851,4 +896,9 @@ def activate_job():
 ########################################################################
 
 if __name__ == '__main__':
+	try:
+		loadNodes()
+	except:
+		print("File not found!!")
+
 	app.run(debug=True)
