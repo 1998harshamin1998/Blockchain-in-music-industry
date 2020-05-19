@@ -21,6 +21,5 @@ class Block:
         block_string = json.dumps(self.__dict__, sort_keys=True)
         return sha256(block_string.encode()).hexdigest()
 
-
     def __repr__(self):
-        return 'index: ' + str(self.index) + "Proof: " + str(self.proof) + "Transactions: " + str(self.transactions) + " timestamp: " + str(self.timestamp)  + " previousHash: " + str(self.previousHash)
+        return 'index: ' + str(self.index) + "Proof: " + str(self.proof) + "Transactions: " + str(self.transactions) + "timestamp: " + str(self.timestamp) + " previousHash: " + str(self.previousHash)
